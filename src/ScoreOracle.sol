@@ -2,6 +2,9 @@
 
 pragma solidity ^0.8.18;
 
+import {FantasyPlayerNFT} from "./FantasyPlayerNFT.sol";
+import {JugadorStruct} from "./JugadorStruct.sol";
+
 // Contrato que se encarga de almacenar y actualizar las puntuaciones de los jugadores
 // recibe datos de puntuacion de jugadores usando oraculos
 // actualiza la puntuacion de los nft
