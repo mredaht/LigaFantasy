@@ -38,7 +38,20 @@ contract FantasyPlayerNFT is ERC721, Ownable {
         );
         uint tokenId = nextTokenId;
         _safeMint(to, tokenId);
-        jugadores[tokenId] = JugadorStruct.Jugador(tokenId, name, team, 0);
+        jugadores[tokenId] = JugadorStruct.Jugador(
+            tokenId,
+            name,
+            team,
+            0,
+            0,
+            0,
+            0,
+            0,
+            false,
+            0,
+            0,
+            false
+        );
         nextTokenId++;
         jugadoresDisponibles.push(tokenId);
     }
@@ -48,5 +61,56 @@ contract FantasyPlayerNFT is ERC721, Ownable {
     ) external view returns (uint256, string memory, string memory, uint256) {
         JugadorStruct.Jugador memory jugador = jugadores[_id];
         return (jugador.id, jugador.nombre, jugador.equipo, jugador.puntuacion);
+    }
+
+    function actualizarEstadisticas(
+        uint256 _tokenId,
+        uint256 _goles,
+        uint256 _asistencias,
+        uint256 _despejes,
+        uint256 _minutosJugados,
+        bool _porteriaCero,
+        uint256 _tarjetasAmarillas,
+        uint256 _tarjetasRojas,
+        bool _ganoPartido
+    ) external onlyOwner {
+        JugadorStruct.Jugador storage jugador = jugadores[_tokenId];
+
+        jugador.goles = _goles;
+        jugador.asistencias = _asistencias;
+        jugador.despejes = _despejes;
+        jugador.minutosJugados = _minutosJugados;
+        jugador.porteriaCero = _porteriaCero;
+        jugador.tarjetasAmarillas = _tarjetasAmarillas;
+        jugador.tarjetasRojas = _tarjetasRojas;
+        jugador.ganoPartido = _ganoPartido;
+
+        // Llamamos a la función para calcular la puntuación después de actualizar
+        jugador.puntuacion = calcularPuntuacion(jugador);
+    }
+
+    function calcularPuntuacion(
+        JugadorStruct.Jugador memory jugador
+    ) public pure returns (uint256) {
+        uint256 puntuacion = 0;
+
+        if (jugador.ganoPartido) {
+            puntuacion += 3;
+        }
+        puntuacion += jugador.goles * 4;
+        puntuacion += jugador.asistencias * 3;
+        puntuacion += jugador.despejes * 1;
+
+        if (jugador.minutosJugados >= 30) {
+            puntuacion += (jugador.minutosJugados >= 60) ? 2 : 1;
+        }
+        if (jugador.porteriaCero) {
+            puntuacion += 3;
+        }
+
+        puntuacion -= jugador.tarjetasAmarillas * 1;
+        puntuacion -= jugador.tarjetasRojas * 3;
+
+        return puntuacion;
     }
 }

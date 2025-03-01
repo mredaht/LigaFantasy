@@ -120,9 +120,32 @@ contract FantasyLeague is Ownable {
                 uint256 id,
                 string memory nombre,
                 string memory equipo,
+                ,
+                ,
+                ,
+                ,
+                ,
+                ,
+                ,
+                ,
 
             ) = fantasyPlayerNFT.jugadores(i);
-            jugadores.push(JugadorStruct.Jugador(id, nombre, equipo, 0));
+            jugadores.push(
+                JugadorStruct.Jugador(
+                    id,
+                    nombre,
+                    equipo,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    false,
+                    0,
+                    0,
+                    false
+                )
+            );
         }
     }
 }
