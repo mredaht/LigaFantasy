@@ -21,7 +21,7 @@ contract FantasyLeague is Ownable {
     enum Status {
         JornadaSinComenzar,
         //AgregacionDeJugadores,
-        FormacionDeEquipos,
+        //FormacionDeEquipos,
         JornadaEnCurso,
         JornadaFinalizada
     }
@@ -128,6 +128,8 @@ contract FantasyLeague is Ownable {
                 ,
                 ,
                 ,
+                ,
+                ,
 
             ) = fantasyPlayerNFT.jugadores(i);
             jugadores.push(
@@ -135,6 +137,8 @@ contract FantasyLeague is Ownable {
                     id,
                     nombre,
                     equipo,
+                    0,
+                    0,
                     0,
                     0,
                     0,

@@ -47,6 +47,8 @@ contract FantasyPlayerNFT is ERC721, Ownable {
             0,
             0,
             0,
+            0,
+            0,
             false,
             0,
             0,
@@ -67,6 +69,8 @@ contract FantasyPlayerNFT is ERC721, Ownable {
         uint256 _tokenId,
         uint256 _goles,
         uint256 _asistencias,
+        uint256 _paradas,
+        uint256 _penaltisParados,
         uint256 _despejes,
         uint256 _minutosJugados,
         bool _porteriaCero,
@@ -78,6 +82,8 @@ contract FantasyPlayerNFT is ERC721, Ownable {
 
         jugador.goles = _goles;
         jugador.asistencias = _asistencias;
+        jugador.paradas = _paradas;
+        jugador.penaltisParados = _penaltisParados;
         jugador.despejes = _despejes;
         jugador.minutosJugados = _minutosJugados;
         jugador.porteriaCero = _porteriaCero;
@@ -99,6 +105,8 @@ contract FantasyPlayerNFT is ERC721, Ownable {
         }
         puntuacion += jugador.goles * 4;
         puntuacion += jugador.asistencias * 3;
+        puntuacion += jugador.paradas * 1;
+        puntuacion += jugador.penaltisParados * 5;
         puntuacion += jugador.despejes * 1;
 
         if (jugador.minutosJugados >= 30) {

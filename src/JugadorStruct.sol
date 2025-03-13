@@ -10,6 +10,8 @@ library JugadorStruct {
         // Nuevos campos para registrar estadísticas
         uint256 goles;
         uint256 asistencias;
+        uint256 paradas;
+        uint256 penaltisParados;
         uint256 despejes;
         uint256 minutosJugados;
         bool porteriaCero;
