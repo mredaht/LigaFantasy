@@ -19,7 +19,8 @@ contract FantasyPlayerNFT is ERC721, Ownable {
 
     // Mapeo de id de jugador a jugador
     mapping(uint256 => JugadorStruct.Jugador) public jugadores;
-    uint256[] public jugadoresDisponibles; // Lista de IDs de jugadores disponibles
+
+    //uint256[] public jugadoresDisponibles; // Lista de IDs de jugadores disponibles
 
     constructor() ERC721("FantasyLeague", "FLNFT") Ownable(msg.sender) {}
 
@@ -55,15 +56,16 @@ contract FantasyPlayerNFT is ERC721, Ownable {
             false
         );
         nextTokenId++;
-        jugadoresDisponibles.push(tokenId);
+        //jugadoresDisponibles.push(tokenId);
     }
 
+    /*
     function obtenerJugador(
         uint256 _id
     ) external view returns (uint256, string memory, string memory, uint256) {
         JugadorStruct.Jugador memory jugador = jugadores[_id];
         return (jugador.id, jugador.nombre, jugador.equipo, jugador.puntuacion);
-    }
+    }*/
 
     function actualizarEstadisticas(
         uint256 _tokenId,
