@@ -4,7 +4,7 @@ pragma solidity ^0.8.19;
 import "forge-std/Script.sol";
 import "../src/FantasyPlayerNFT.sol";
 import "../src/FantasyLeague.sol";
-import "./SavePlayers.sol"; // Importamos la librería
+import "./SavePlayers.s.sol"; // Importamos la librería
 
 contract DeployFantasy is Script {
     function run() external {
