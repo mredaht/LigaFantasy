@@ -4,7 +4,7 @@ pragma solidity ^0.8.19;
 import "forge-std/Script.sol";
 import "../src/FantasyPlayerNFT.sol";
 import "../src/FantasyLeague.sol";
-import "./SavePlayers.s.sol";
+import "./SavePlayers.sol"; // Importamos la librería
 
 contract DeployFantasy is Script {
     function run() external {
@@ -14,9 +14,8 @@ contract DeployFantasy is Script {
         FantasyPlayerNFT fantasyPlayerNFT = new FantasyPlayerNFT();
         console.log("FantasyPlayerNFT deployed at:", address(fantasyPlayerNFT));
 
-        // 2. Obtener jugadores desde SavePlayers
-        SavePlayers savePlayers = new SavePlayers();
-        SavePlayers.PlayerData[] memory players = savePlayers.getPlayers();
+        // 2. Obtener jugadores desde SavePlayers (sin necesidad de instanciar SavePlayers)
+        SavePlayers.PlayerData[] memory players = SavePlayers.getPlayers();
 
         // 3. Mintear jugadores
         for (uint256 i = 0; i < players.length; i++) {

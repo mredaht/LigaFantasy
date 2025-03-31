@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-contract SavePlayers {
+library SavePlayers {
     struct PlayerData {
         string name;
         string team;
     }
 
-    function getPlayers() public pure returns (PlayerData[] memory) {
+    function getPlayers() external pure returns (PlayerData[] memory) {
         PlayerData[] memory players = new PlayerData[](140);
         uint index = 0;
         // Barcelona
