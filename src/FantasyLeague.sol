@@ -2,8 +2,6 @@
 
 pragma solidity ^0.8.19;
 
-import "chainlink/contracts/src/v0.8/operatorforwarder/ChainlinkClient.sol";
-import "chainlink/contracts/src/v0.8/shared/access/ConfirmedOwner.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import {FantasyPlayerNFT} from "./FantasyPlayerNFT.sol";
 import {ScoreOracle} from "./ScoreOracle.sol";
