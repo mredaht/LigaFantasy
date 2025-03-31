@@ -4,7 +4,6 @@ pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import {FantasyPlayerNFT} from "./FantasyPlayerNFT.sol";
-import {ScoreOracle} from "./ScoreOracle.sol";
 import {JugadorStruct} from "./JugadorStruct.sol";
 
 // Este contrato se encargará de gestionar la liga de fantasía

@@ -9,7 +9,7 @@ library SavePlayers {
 
     function getPlayers() external pure returns (PlayerData[] memory) {
         PlayerData[] memory players = new PlayerData[](140);
-        uint index = 0;
+        uint256 index = 0;
         // Barcelona
         players[index] = PlayerData("Lewandowski", "Barcelona");
         players[index++] = PlayerData("Pedri", "Barcelona");

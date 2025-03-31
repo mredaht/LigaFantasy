@@ -24,37 +24,12 @@ contract FantasyPlayerNFT is ERC721, Ownable {
 
     constructor() ERC721("FantasyLeague", "FLNFT") Ownable(msg.sender) {}
 
-    function mintPlayer(
-        address to,
-        string memory name,
-        string memory team
-    ) external onlyOwner {
-        require(
-            bytes(name).length > 0,
-            "El nombre del jugador no puede estar vacio"
-        );
-        require(
-            bytes(team).length > 0,
-            "El nombre del equipo no puede estar vacio"
-        );
-        uint tokenId = nextTokenId;
+    function mintPlayer(address to, string memory name, string memory team) external onlyOwner {
+        require(bytes(name).length > 0, "El nombre del jugador no puede estar vacio");
+        require(bytes(team).length > 0, "El nombre del equipo no puede estar vacio");
+        uint256 tokenId = nextTokenId;
         _safeMint(to, tokenId);
-        jugadores[tokenId] = JugadorStruct.Jugador(
-            tokenId,
-            name,
-            team,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            false,
-            0,
-            0,
-            false
-        );
+        jugadores[tokenId] = JugadorStruct.Jugador(tokenId, name, team, 0, 0, 0, 0, 0, 0, 0, false, 0, 0, false);
         nextTokenId++;
         //jugadoresDisponibles.push(tokenId);
     }
@@ -97,9 +72,7 @@ contract FantasyPlayerNFT is ERC721, Ownable {
         jugador.puntuacion = calcularPuntuacion(jugador);
     }
 
-    function calcularPuntuacion(
-        JugadorStruct.Jugador memory jugador
-    ) public pure returns (uint256) {
+    function calcularPuntuacion(JugadorStruct.Jugador memory jugador) public pure returns (uint256) {
         uint256 puntuacion = 0;
 
         if (jugador.ganoPartido) {

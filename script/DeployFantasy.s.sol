@@ -19,19 +19,13 @@ contract DeployFantasy is Script {
 
         // 3. Mintear jugadores
         for (uint256 i = 0; i < players.length; i++) {
-            fantasyPlayerNFT.mintPlayer(
-                msg.sender,
-                players[i].name,
-                players[i].team
-            );
+            fantasyPlayerNFT.mintPlayer(msg.sender, players[i].name, players[i].team);
         }
 
         console.log("Todos los jugadores han sido minteados");
 
         // 4. Desplegar el contrato FantasyLeague
-        FantasyLeague fantasyLeague = new FantasyLeague(
-            address(fantasyPlayerNFT)
-        );
+        FantasyLeague fantasyLeague = new FantasyLeague(address(fantasyPlayerNFT));
         console.log("FantasyLeague deployed at:", address(fantasyLeague));
 
         // 5. Cargar jugadores en la liga
