@@ -68,9 +68,9 @@ contract FantasyPlayerNFT is ERC721, Ownable {
     }
 
     function getPlayer(
-        uint256 tokenId
+        uint256 _tokenId
     ) external view returns (JugadorStruct.Jugador memory) {
-        require(_exists(tokenId), "El jugador no existe");
-        return jugadores[tokenId];
+        require(ownerOf(_tokenId) != address(0), "El jugador no existe");
+        return jugadores[_tokenId];
     }
 }
