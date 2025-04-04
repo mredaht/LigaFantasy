@@ -26,7 +26,6 @@ contract FantasyLeague is Ownable {
         string nombre;
         uint256[5] jugadores;
         uint256 puntuacionEquipo;
-        uint256 idCapitan;
         bool seleccionado;
     }
 
@@ -80,7 +79,6 @@ contract FantasyLeague is Ownable {
             nombre: _nombreEquipo,
             jugadores: _jugadores,
             puntuacionEquipo: 0,
-            idCapitan: _jugadores[0], // Se podría permitir elegir el capitán luego
             seleccionado: true
         });
     }
