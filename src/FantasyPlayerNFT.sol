@@ -18,28 +18,14 @@ contract FantasyPlayerNFT is ERC721, Ownable {
     uint256 public nextTokenId;
     // Mapeo de id de jugador a jugador
     mapping(uint256 => JugadorStruct.Jugador) public jugadores;
-    event PlayerMinted(
-        uint256 indexed tokenId,
-        address indexed owner,
-        string name,
-        string team
-    );
+
+    event PlayerMinted(uint256 indexed tokenId, address indexed owner, string name, string team);
 
     constructor() ERC721("FantasyLeague", "FLNFT") Ownable(msg.sender) {}
 
-    function mintPlayer(
-        address to,
-        string memory name,
-        string memory team
-    ) external onlyOwner {
-        require(
-            bytes(name).length > 0,
-            "El nombre del jugador no puede estar vacio"
-        );
-        require(
-            bytes(team).length > 0,
-            "El nombre del equipo no puede estar vacio"
-        );
+    function mintPlayer(address to, string memory name, string memory team) external onlyOwner {
+        require(bytes(name).length > 0, "El nombre del jugador no puede estar vacio");
+        require(bytes(team).length > 0, "El nombre del equipo no puede estar vacio");
         uint256 tokenId = nextTokenId;
         _safeMint(to, tokenId);
         jugadores[tokenId] = JugadorStruct.Jugador({
