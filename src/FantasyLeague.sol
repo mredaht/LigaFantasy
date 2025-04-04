@@ -17,8 +17,6 @@ contract FantasyLeague is Ownable {
 
     enum Status {
         JornadaSinComenzar,
-        //AgregacionDeJugadores,
-        //FormacionDeEquipos,
         JornadaEnCurso,
         JornadaFinalizada
     }
@@ -36,7 +34,7 @@ contract FantasyLeague is Ownable {
     Status public gameStatus = Status.JornadaSinComenzar;
     JugadorStruct.Jugador[] public jugadores;
     Equipo[] fantasyTeams;
-    uint256 public constant ENTRY_FEE = 0.1 ether;
+    uint256 private constant ENTRY_FEE = 0.1 ether;
     mapping(address => Equipo) public equipos;
     mapping(address => bool) public UsuariosInscritos;
     mapping(uint256 => bool) public jugadorElegido; // Mapea IDs de jugadores a si ya fueron seleccionados
@@ -52,20 +50,8 @@ contract FantasyLeague is Ownable {
 
     modifier jugadoresDisponibles(uint256[5] memory _jugadores) {
         for (uint256 i = 0; i < _jugadores.length; i++) {
-            require(_jugadores[i] < jugadores.length, "Jugador no valido");
-
-            if (jugadorElegido[_jugadores[i]]) {
-                revert(
-                    string(
-                        abi.encodePacked(
-                            "Jugador ya seleccionado: ",
-                            jugadores[_jugadores[i]].nombre,
-                            " del equipo ",
-                            jugadores[_jugadores[i]].equipo
-                        )
-                    )
-                );
-            }
+            require(_jugadores[i] < jugadores.length, "ID de jugador invalido");
+            require(!jugadorElegido[_jugadores[i]], "Jugador ya seleccionado");
         }
         _;
     }

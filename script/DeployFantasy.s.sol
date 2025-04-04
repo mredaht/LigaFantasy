@@ -18,7 +18,7 @@ contract DeployFantasy is Script {
         SavePlayers.PlayerData[] memory players = SavePlayers.getPlayers();
 
         // 3. Mintear jugadores
-        for (uint256 i = 0; i < players.length; i++) {
+        for (uint256 i = 0; i < 130; i++) {
             fantasyPlayerNFT.mintPlayer(msg.sender, players[i].name, players[i].team);
         }
 
