@@ -16,11 +16,14 @@ contract FantasyPlayerNFT is ERC721, Ownable {
     using JugadorStruct for JugadorStruct.Jugador;
 
     uint256 public nextTokenId;
-
     // Mapeo de id de jugador a jugador
     mapping(uint256 => JugadorStruct.Jugador) public jugadores;
-
-    //uint256[] public jugadoresDisponibles; // Lista de IDs de jugadores disponibles
+    event PlayerMinted(
+        uint256 indexed tokenId,
+        address indexed owner,
+        string name,
+        string team
+    );
 
     constructor() ERC721("FantasyLeague", "FLNFT") Ownable(msg.sender) {}
 
@@ -39,84 +42,35 @@ contract FantasyPlayerNFT is ERC721, Ownable {
         );
         uint256 tokenId = nextTokenId;
         _safeMint(to, tokenId);
-        jugadores[tokenId] = JugadorStruct.Jugador(
-            tokenId,
-            name,
-            team,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            false,
-            0,
-            0,
-            false
-        );
+        jugadores[tokenId] = JugadorStruct.Jugador({
+            id: tokenId,
+            nombre: name,
+            equipo: team,
+            puntuacion: 0,
+            goles: 0,
+            asistencias: 0,
+            paradas: 0,
+            penaltisParados: 0,
+            despejes: 0,
+            minutosJugados: 0,
+            porteriaCero: false,
+            tarjetasAmarillas: 0,
+            tarjetasRojas: 0,
+            ganoPartido: false
+        });
+        // Emitir un evento para el minting
+        emit PlayerMinted(tokenId, to, name, team);
         nextTokenId++;
-        //jugadoresDisponibles.push(tokenId);
     }
 
     function getNextTokenId() external view returns (uint256) {
         return nextTokenId;
     }
 
-    function actualizarEstadisticas(
-        uint256 _tokenId,
-        uint256 _goles,
-        uint256 _asistencias,
-        uint256 _paradas,
-        uint256 _penaltisParados,
-        uint256 _despejes,
-        uint256 _minutosJugados,
-        bool _porteriaCero,
-        uint256 _tarjetasAmarillas,
-        uint256 _tarjetasRojas,
-        bool _ganoPartido
-    ) external onlyOwner {
-        JugadorStruct.Jugador storage jugador = jugadores[_tokenId];
-
-        jugador.goles = _goles;
-        jugador.asistencias = _asistencias;
-        jugador.paradas = _paradas;
-        jugador.penaltisParados = _penaltisParados;
-        jugador.despejes = _despejes;
-        jugador.minutosJugados = _minutosJugados;
-        jugador.porteriaCero = _porteriaCero;
-        jugador.tarjetasAmarillas = _tarjetasAmarillas;
-        jugador.tarjetasRojas = _tarjetasRojas;
-        jugador.ganoPartido = _ganoPartido;
-
-        // Llamamos a la función para calcular la puntuación después de actualizar
-        jugador.puntuacion = calcularPuntuacion(jugador);
-    }
-
-    function calcularPuntuacion(
-        JugadorStruct.Jugador memory jugador
-    ) public pure returns (uint256) {
-        uint256 puntuacion = 0;
-
-        if (jugador.ganoPartido) {
-            puntuacion += 3;
-        }
-        puntuacion += jugador.goles * 4;
-        puntuacion += jugador.asistencias * 3;
-        puntuacion += jugador.paradas * 1;
-        puntuacion += jugador.penaltisParados * 5;
-        puntuacion += jugador.despejes * 1;
-
-        if (jugador.minutosJugados >= 30) {
-            puntuacion += (jugador.minutosJugados >= 60) ? 2 : 1;
-        }
-        if (jugador.porteriaCero) {
-            puntuacion += 3;
-        }
-
-        puntuacion -= jugador.tarjetasAmarillas * 1;
-        puntuacion -= jugador.tarjetasRojas * 3;
-
-        return puntuacion;
+    function getPlayer(
+        uint256 tokenId
+    ) external view returns (JugadorStruct.Jugador memory) {
+        require(_exists(tokenId), "El jugador no existe");
+        return jugadores[tokenId];
     }
 }

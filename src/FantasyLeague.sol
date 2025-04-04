@@ -149,4 +149,59 @@ contract FantasyLeague is Ownable {
             );
         }
     }
+
+    function actualizarEstadisticas(
+        uint256 _tokenId,
+        uint256 _goles,
+        uint256 _asistencias,
+        uint256 _paradas,
+        uint256 _penaltisParados,
+        uint256 _despejes,
+        uint256 _minutosJugados,
+        bool _porteriaCero,
+        uint256 _tarjetasAmarillas,
+        uint256 _tarjetasRojas,
+        bool _ganoPartido
+    ) external onlyOwner {
+        require(_tokenId < jugadores.length, "Jugador no existe");
+
+        JugadorStruct.Jugador storage jugador = jugadores[_tokenId];
+
+        jugador.goles = _goles;
+        jugador.asistencias = _asistencias;
+        jugador.paradas = _paradas;
+        jugador.penaltisParados = _penaltisParados;
+        jugador.despejes = _despejes;
+        jugador.minutosJugados = _minutosJugados;
+        jugador.porteriaCero = _porteriaCero;
+        jugador.tarjetasAmarillas = _tarjetasAmarillas;
+        jugador.tarjetasRojas = _tarjetasRojas;
+        jugador.ganoPartido = _ganoPartido;
+
+        // Calcular nueva puntuación
+        jugador.puntuacion = calcularPuntuacion(jugador);
+    }
+
+    function calcularPuntuacion(
+        JugadorStruct.Jugador memory jugador
+    ) internal pure returns (uint256) {
+        uint256 puntuacion = 0;
+
+        if (jugador.ganoPartido) puntuacion += 3;
+        puntuacion += jugador.goles * 4;
+        puntuacion += jugador.asistencias * 3;
+        puntuacion += jugador.paradas * 1;
+        puntuacion += jugador.penaltisParados * 5;
+        puntuacion += jugador.despejes * 1;
+
+        if (jugador.minutosJugados >= 30) {
+            puntuacion += (jugador.minutosJugados >= 60) ? 2 : 1;
+        }
+        if (jugador.porteriaCero) puntuacion += 3;
+
+        puntuacion -= jugador.tarjetasAmarillas * 1;
+        puntuacion -= jugador.tarjetasRojas * 3;
+
+        return puntuacion;
+    }
 }
