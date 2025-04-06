@@ -36,6 +36,7 @@ contract FantasyLeague is Ownable {
     event PremioDistribuido(address indexed ganador, uint256 cantidad);
     event EstadoJornadaActualizado(Status nuevoEstado);
     event JornadaReiniciada();
+    event RetiroDeFondos(address indexed admin, uint256 cantidad);
 
     FantasyPlayerNFT public fantasyPlayerNFT;
     Status public gameStatus = Status.JornadaSinComenzar;
@@ -231,6 +232,16 @@ contract FantasyLeague is Ownable {
         require(success, "Transferencia al ganador fallida");
 
         emit PremioDistribuido(ganador, premio);
+    }
+
+    // === FUNCION RETIRO ===
+    function withdraw() external onlyOwner {
+        uint256 cantidad = address(this).balance;
+        uint256 retiro = (cantidad * 20) / 100; // 20% del balance
+        (bool success,) = payable(owner()).call{value: retiro}("");
+        require(success, "Transferencia fallida");
+
+        emit RetiroDeFondos(owner(), retiro);
     }
 
     // === FUNCIONES VIEW EXTRA ===
