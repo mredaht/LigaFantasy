@@ -209,4 +209,28 @@ contract FantasyLeague is Ownable {
 
         return puntuacion;
     }
+
+    function calcularPuntuacionEquipo(
+        address _jugador
+    ) public view returns (uint256 total) {
+        require(equipos[_jugador].seleccionado, "El jugador no tiene equipo");
+        total = 0;
+        uint256[5] memory ids = equipos[_jugador].jugadores;
+        for (uint256 i = 0; i < ids.length; i++) {
+            total += jugadores[ids[i]].puntuacion;
+        }
+        return total;
+    }
+
+    function actualizarPuntuacionesDeTodos()
+        public
+        onlyOwner
+        enEstado(Status.JornadaFinalizada)
+    {
+        for (uint256 i = 0; i < fantasyTeams.length; i++) {
+            address addr = fantasyTeams[i].owner;
+            uint256 puntos = calcularPuntuacionEquipo(addr);
+            equipos[addr].puntuacionEquipo = puntos;
+        }
+    }
 }
