@@ -15,6 +15,8 @@ import {JugadorStruct} from "./JugadorStruct.sol";
 contract FantasyLeague is Ownable {
     using JugadorStruct for JugadorStruct.Jugador;
 
+    event PremioDistribuido(address indexed ganador, uint256 cantidad);
+
     enum Status {
         JornadaSinComenzar,
         JornadaEnCurso,
@@ -110,6 +112,8 @@ contract FantasyLeague is Ownable {
             puntuacionEquipo: 0,
             seleccionado: true
         });
+
+        fantasyTeams.push(equipos[msg.sender]);
     }
 
     function cargarJugadoresDisponibles() external onlyOwner {
@@ -232,5 +236,30 @@ contract FantasyLeague is Ownable {
             uint256 puntos = calcularPuntuacionEquipo(addr);
             equipos[addr].puntuacionEquipo = puntos;
         }
+    }
+
+    function distribuirPremio()
+        external
+        onlyOwner
+        enEstado(Status.JornadaFinalizada)
+    {
+        address ganador;
+        uint256 maxPuntos = 0;
+
+        for (uint256 i = 0; i < fantasyTeams.length; i++) {
+            address addr = fantasyTeams[i].owner;
+            uint256 puntos = calcularPuntuacionEquipo(addr);
+
+            if (puntos > maxPuntos) {
+                maxPuntos = puntos;
+                ganador = addr;
+            }
+        }
+        require(ganador != address(0), "No hay ganador");
+        uint256 premio = (address(this).balance * 80) / 100; // 80% del balance
+        (bool success, ) = payable(ganador).call{value: premio}("");
+        require(success, "Transferencia al ganador fallida");
+
+        emit PremioDistribuido(ganador, premio);
     }
 }
