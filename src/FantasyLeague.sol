@@ -15,8 +15,6 @@ import {JugadorStruct} from "./JugadorStruct.sol";
 contract FantasyLeague is Ownable {
     using JugadorStruct for JugadorStruct.Jugador;
 
-    event PremioDistribuido(address indexed ganador, uint256 cantidad);
-
     enum Status {
         JornadaSinComenzar,
         JornadaEnCurso,
@@ -30,6 +28,20 @@ contract FantasyLeague is Ownable {
         uint256 puntuacionEquipo;
         bool seleccionado;
     }
+
+    // === EVENTOS ===
+    event EntradaPagada(address indexed usuario);
+    event JugadoresSeleccionados(
+        address indexed usuario,
+        string nombreEquipo,
+        uint256[5] jugadores
+    );
+    event EstadisticasActualizadas(
+        uint256 indexed jugadorId,
+        uint256 nuevaPuntuacion
+    );
+    event PremioDistribuido(address indexed ganador, uint256 cantidad);
+    event EstadoJornadaActualizado(Status nuevoEstado);
 
     FantasyPlayerNFT public fantasyPlayerNFT;
     Status public gameStatus = Status.JornadaSinComenzar;
@@ -68,6 +80,7 @@ contract FantasyLeague is Ownable {
         enEstado(Status.JornadaSinComenzar)
     {
         gameStatus = Status.JornadaEnCurso;
+        emit EstadoJornadaActualizado(gameStatus);
     }
 
     function finalizarJornada()
@@ -76,6 +89,7 @@ contract FantasyLeague is Ownable {
         enEstado(Status.JornadaEnCurso)
     {
         gameStatus = Status.JornadaFinalizada;
+        emit EstadoJornadaActualizado(gameStatus);
     }
 
     function pagarEntrada() public payable {
@@ -85,6 +99,7 @@ contract FantasyLeague is Ownable {
             "Ya estas inscrito en la jornada"
         );
         UsuariosInscritos[msg.sender] = true;
+        emit EntradaPagada(msg.sender);
     }
 
     function seleccionarJugadores(
@@ -114,6 +129,8 @@ contract FantasyLeague is Ownable {
         });
 
         fantasyTeams.push(equipos[msg.sender]);
+
+        emit JugadoresSeleccionados(msg.sender, _nombreEquipo, _jugadores);
     }
 
     function cargarJugadoresDisponibles() external onlyOwner {
@@ -189,6 +206,8 @@ contract FantasyLeague is Ownable {
 
         // Calcular nueva puntuación
         jugador.puntuacion = calcularPuntuacion(jugador);
+
+        emit EstadisticasActualizadas(_tokenId, jugador.puntuacion);
     }
 
     function calcularPuntuacion(
