@@ -55,19 +55,48 @@ contract FantasyLeague is Ownable {
         _;
     }
 
+    modifier enEstado(Status _estado) {
+        require(gameStatus == _estado, "Estado invalido para esta accion");
+        _;
+    }
+
+    function iniciarJornada()
+        external
+        onlyOwner
+        enEstado(Status.JornadaSinComenzar)
+    {
+        gameStatus = Status.JornadaEnCurso;
+    }
+
+    function finalizarJornada()
+        external
+        onlyOwner
+        enEstado(Status.JornadaEnCurso)
+    {
+        gameStatus = Status.JornadaFinalizada;
+    }
+
     function pagarEntrada() public payable {
         require(msg.value == ENTRY_FEE, "La entrada cuesta 0.1 ether");
-        require(!UsuariosInscritos[msg.sender], "Ya estas inscrito en la jornada");
+        require(
+            !UsuariosInscritos[msg.sender],
+            "Ya estas inscrito en la jornada"
+        );
         UsuariosInscritos[msg.sender] = true;
     }
 
-    function seleccionarJugadores(string memory _nombreEquipo, uint256[5] memory _jugadores)
-        public
-        onlyInscrito
-        jugadoresDisponibles(_jugadores)
-    {
-        require(!equipos[msg.sender].seleccionado, "Ya seleccionaste tus jugadores");
-        require(bytes(_nombreEquipo).length > 0, "El nombre del equipo no puede estar vacio");
+    function seleccionarJugadores(
+        string memory _nombreEquipo,
+        uint256[5] memory _jugadores
+    ) public onlyInscrito jugadoresDisponibles(_jugadores) {
+        require(
+            !equipos[msg.sender].seleccionado,
+            "Ya seleccionaste tus jugadores"
+        );
+        require(
+            bytes(_nombreEquipo).length > 0,
+            "El nombre del equipo no puede estar vacio"
+        );
 
         // Marcar los jugadores como seleccionados
         for (uint256 i = 0; i < _jugadores.length; i++) {
@@ -89,8 +118,40 @@ contract FantasyLeague is Ownable {
         delete jugadores; // Resetear la lista para evitar duplicados
 
         for (uint256 i = 0; i < totalJugadores; i++) {
-            (uint256 id, string memory nombre, string memory equipo,,,,,,,,,,,) = fantasyPlayerNFT.jugadores(i);
-            jugadores.push(JugadorStruct.Jugador(id, nombre, equipo, 0, 0, 0, 0, 0, 0, 0, false, 0, 0, false));
+            (
+                uint256 id,
+                string memory nombre,
+                string memory equipo,
+                ,
+                ,
+                ,
+                ,
+                ,
+                ,
+                ,
+                ,
+                ,
+                ,
+
+            ) = fantasyPlayerNFT.jugadores(i);
+            jugadores.push(
+                JugadorStruct.Jugador(
+                    id,
+                    nombre,
+                    equipo,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    false,
+                    0,
+                    0,
+                    false
+                )
+            );
         }
     }
 
@@ -126,7 +187,9 @@ contract FantasyLeague is Ownable {
         jugador.puntuacion = calcularPuntuacion(jugador);
     }
 
-    function calcularPuntuacion(JugadorStruct.Jugador memory jugador) internal pure returns (uint256) {
+    function calcularPuntuacion(
+        JugadorStruct.Jugador memory jugador
+    ) internal pure returns (uint256) {
         uint256 puntuacion = 0;
 
         if (jugador.ganoPartido) puntuacion += 3;
