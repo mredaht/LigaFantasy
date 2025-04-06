@@ -42,6 +42,7 @@ contract FantasyLeague is Ownable {
     );
     event PremioDistribuido(address indexed ganador, uint256 cantidad);
     event EstadoJornadaActualizado(Status nuevoEstado);
+    event JornadaReiniciada();
 
     FantasyPlayerNFT public fantasyPlayerNFT;
     Status public gameStatus = Status.JornadaSinComenzar;
@@ -89,6 +90,27 @@ contract FantasyLeague is Ownable {
         enEstado(Status.JornadaEnCurso)
     {
         gameStatus = Status.JornadaFinalizada;
+        emit EstadoJornadaActualizado(gameStatus);
+    }
+
+    function resetJornada()
+        external
+        onlyOwner
+        enEstado(Status.JornadaFinalizada)
+    {
+        for (uint256 i = 0; i < fantasyTeams.length; i++) {
+            delete equipos[fantasyTeams[i].owner];
+            UsuariosInscritos[fantasyTeams[i].owner] = false;
+        }
+
+        delete fantasyTeams;
+
+        for (uint256 i = 0; i < jugadores.length; i++) {
+            jugadorElegido[i] = false;
+        }
+
+        gameStatus = Status.JornadaSinComenzar;
+        emit JornadaReiniciada();
         emit EstadoJornadaActualizado(gameStatus);
     }
 
