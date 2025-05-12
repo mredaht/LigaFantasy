@@ -5,26 +5,39 @@ import "forge-std/Script.sol";
 import {FantasyPlayerNFT} from "../src/FantasyPlayerNFT.sol";
 import {SavePlayers} from "./SavePlayers.s.sol";
 
-contract MintPlayers is Script {
+contract MintBatch is Script {
+    uint256 constant BATCH_SIZE = 20;
+
     function run() external {
-        uint256 privateKey = vm.envUint("PRIVATE_KEY");
-        address nftContractAddress = vm.envAddress("NFT_CONTRACT_ADDRESS");
-        address owner = vm.addr(privateKey);
+        /* ─── 1. Credenciales & contratos ─────────────────────────── */
+        uint256 pk = vm.envUint("PRIVATE_KEY"); // tu clave
+        address nftAddr = vm.envAddress("NFT_CONTRACT_ADDRESS");
+        address receiver = vm.addr(pk); // dueño de los NFT
 
-        vm.startBroadcast(privateKey);
+        FantasyPlayerNFT nft = FantasyPlayerNFT(nftAddr);
+        SavePlayers.PlayerData[] memory p = SavePlayers.getPlayers();
 
-        FantasyPlayerNFT nft = FantasyPlayerNFT(nftContractAddress);
-        SavePlayers.PlayerData[] memory players = SavePlayers.getPlayers();
+        /* ─── 2. Elegir de dónde a dónde mintear ──────────────────── */
+        uint256 start = vm.envOr("START_INDEX", nft.getNextTokenId());
+        uint256 end = start + BATCH_SIZE;
+        if (end > p.length) end = p.length; // no pasar del array
 
-        uint256 batchSize = 20;
-        uint256 start = vm.envOr("START_INDEX", uint256(0));
-        uint256 end = start + batchSize;
-        if (end > players.length) {
-            end = players.length;
-        }
+        require(start < end, "Nada que mintear (START_INDEX >= total)");
 
-        for (uint256 i = start; i < end; i++) {
-            nft.mintPlayer(owner, players[i].name, players[i].team);
+        /* ─── 3. Mint en broadcast ────────────────────────────────── */
+        vm.startBroadcast(pk);
+
+        for (uint256 i = start; i < end; ++i) {
+            // salta entradas vacías (por si amplías la lista en el futuro)
+            if (bytes(p[i].name).length == 0) continue;
+
+            try nft.mintPlayer(receiver, p[i].name, p[i].team) {
+                console2.log(" Mint %s (%s) id %d", p[i].name, p[i].team, i);
+            } catch Error(string memory reason) {
+                console2.log(" Fallo id %d  %s", i, reason);
+            } catch {
+                console2.log(" Fallo id %d (error desconocido)", i);
+            }
         }
 
         vm.stopBroadcast();

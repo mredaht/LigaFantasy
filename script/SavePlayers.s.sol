@@ -8,11 +8,14 @@ library SavePlayers {
     }
 
     function getPlayers() external pure returns (PlayerData[] memory) {
-        PlayerData[] memory players = new PlayerData[](140);
+        PlayerData[] memory players = new PlayerData[](131); // Adjust size as needed
         uint256 index = 0;
         // Barcelona
-        players[index] = PlayerData("Lewandowski", "Barcelona");
+        players[index++] = PlayerData("Lewandowski", "Barcelona");
         players[index++] = PlayerData("Pedri", "Barcelona");
+        players[index++] = PlayerData("Bellingham", "Real Madrid");
+        players[index++] = PlayerData("Vinicius", "Real Madrid");
+
         players[index++] = PlayerData("Gavi", "Barcelona");
         players[index++] = PlayerData("Ter Stegen", "Barcelona");
         players[index++] = PlayerData("De Jong", "Barcelona");
@@ -24,8 +27,6 @@ library SavePlayers {
         players[index++] = PlayerData("Balde", "Barcelona");
 
         // Real Madrid
-        players[index++] = PlayerData("Bellingham", "Real Madrid");
-        players[index++] = PlayerData("Vinicius", "Real Madrid");
         players[index++] = PlayerData("Rodrygo", "Real Madrid");
         players[index++] = PlayerData("Mbappe", "Real Madrid");
         players[index++] = PlayerData("Modric", "Real Madrid");
