@@ -8,10 +8,10 @@ library SavePlayers {
     }
 
     function getPlayers() external pure returns (PlayerData[] memory) {
-        PlayerData[] memory players = new PlayerData[](131); // Adjust size as needed
+        PlayerData[] memory players = new PlayerData[](133); // Adjust size as needed
         uint256 index = 0;
         // Barcelona
-        players[index++] = PlayerData("Lewandowski", "Barcelona");
+        players[index] = PlayerData("Lewandowski", "Barcelona");
         players[index++] = PlayerData("Pedri", "Barcelona");
         players[index++] = PlayerData("Bellingham", "Real Madrid");
         players[index++] = PlayerData("Vinicius", "Real Madrid");
@@ -45,7 +45,7 @@ library SavePlayers {
         players[index++] = PlayerData("Lenglet", "Atletico Madrid");
         players[index++] = PlayerData("Gimenez", "Atletico Madrid");
         players[index++] = PlayerData("Llorente", "Atletico Madrid");
-        players[index++] = PlayerData("De paul", "Atletico Madrid");
+        players[index++] = PlayerData("De Paul", "Atletico Madrid");
         players[index++] = PlayerData("Giuliano", "Atletico Madrid");
         players[index++] = PlayerData("Samuel Lino", "Atletico Madrid");
         players[index++] = PlayerData("Le Normand", "Atletico Madrid");
@@ -59,12 +59,12 @@ library SavePlayers {
         players[index++] = PlayerData("Sancet", "Athletic Bilbao");
 
         //VillaReal
-        players[index++] = PlayerData("Gueye", "VillaReal");
-        players[index++] = PlayerData("Diego Conde", "VillaReal");
-        players[index++] = PlayerData("Sergi Cardona", "VillaReal");
-        players[index++] = PlayerData("Foyth", "VillaReal");
-        players[index++] = PlayerData("Alex Baena", "VillaReal");
-        players[index++] = PlayerData("Ayoze Perez", "VillaReal");
+        players[index++] = PlayerData("Gueye", "Villareal");
+        players[index++] = PlayerData("Diego Conde", "Villareal");
+        players[index++] = PlayerData("Sergi Cardona", "Villareal");
+        players[index++] = PlayerData("Foyth", "Villareal");
+        players[index++] = PlayerData("Alex Baena", "Villareal");
+        players[index++] = PlayerData("Ayoze Perez", "Villareal");
 
         //Rayo Vallecano
         players[index++] = PlayerData("Batalla", "Rayo Vallecano");
@@ -78,7 +78,7 @@ library SavePlayers {
         players[index++] = PlayerData("Llorente", "Betis");
         players[index++] = PlayerData("Isco", "Betis");
         players[index++] = PlayerData("Anthony", "Betis");
-        players[index++] = PlayerData("Jesus Rodriguez", "Betis");
+        players[index++] = PlayerData("Abde", "Betis");
 
         // Mallorca
         players[index++] = PlayerData("Greif", "Mallorca");
